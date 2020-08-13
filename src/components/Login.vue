@@ -2,7 +2,7 @@
   <div>
     <div class="col 12s">
       <div class="card-panel center red" id='msjerror' v-if="error" >{{error}}</div>
-      </div>
+    </div>
     <div class="row">
       <form class="col s5 card-panel" @submit.prevent="registrar">
         <h4 class="center">Registrar cuenta</h4>
@@ -29,7 +29,7 @@
             <label for="icon_password">Repetir contraseña</label>
           </div>
           <div class="col s12 center">
-            <button class="btn waves-effect waves-light lime right btn-large" type="submit" name="action">Registrar
+            <button class="btn waves-effect waves-light grey right btn-large" type="submit" name="action">Registrar
               <i class="material-icons right white-text ">send</i>
             </button>
           </div>
@@ -50,7 +50,7 @@
             <label for="icon_vpn_key">Contraseña</label>
           </div>
           <div class="col s12 center">
-            <button class="btn waves-effect waves-light lime right btn-large" type="submit" name="action">Ingresar
+            <button class="btn waves-effect waves-light grey right btn-large" type="submit" name="action">Ingresar
               <i class="material-icons right white-text">send</i>
             </button>
           </div>
@@ -121,11 +121,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.active {
-  color: #cddc39;
-}
 .card-panel {
   padding: 0 2rem 0 2rem;
+  margin-top: 4rem;
 } 
 #msjerror {
   font-size: 1.3rem;
