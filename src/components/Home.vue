@@ -13,8 +13,13 @@
                     </div>
                     <div class="col s1 center">
                         <button class="btn-floating waves-effect waves-light grey"><i class="material-icons">add</i></button>
-                        <button class="btn-floating waves-effect waves-light grey"><i class="material-icons">add_a_photo</i></button>
-                    </div>
+                        <div class="file-field input-field">
+                            <div class="btn-floating waves-effect waves-light grey">
+                                <span><i class="material-icons">add_a_photo</i></span>
+                                <input type="file">
+                            </div>
+                        </div>
+                      </div>
                 </div>
             </form>
         </div>
@@ -31,10 +36,12 @@
                     <div class="card-content">
                         <p>{{ posteo.text }}</p>
                     </div>
-                    <div class="card-action right-align" >
-                        {{ posteo.date }}
-                        <a href="#"  class="secondary-content"><i class="material-icons">favorite</i></a>
-                        <span class="likes">1</span>
+                    <div class="card-content" >
+                            <span>{{ posteo.date }}</span>
+                            <a href="#"  class="secondary-content" @click.prevent="like(posteo.id)" >
+                                <i class="material-icons red-text">favorite</i>
+                                <span class="likes grey-text"><sup>{{posteo.likes}}</sup></span>
+                            </a>
                     </div>
                 </div>
             </div>
@@ -49,9 +56,8 @@ import { db } from '@/firebase.js';
 const getDate = () => {
   const trailing = (d) => d.length < 10 ? '0'+d : d;
   const now = new Date();
-  return `${now.getFullYear()}-${trailing(now.getMonth())}-${trailing(now.getDate())} ${trailing(now.getHours())}:${trailing(now.getMinutes())}:${trailing(now.getSeconds())}`;
+  return `${trailing(now.getDate())}.${trailing(now.getMonth()+1)}.${now.getFullYear()-2000}`;
 }
-
 export default {
     name: 'Home',
     computed: {
@@ -78,8 +84,17 @@ export default {
                 nombre: user.displayName,
                 userid: user.uid
             },
-            likes: 0   
-        })
+            likes: 0, 
+        }),
+        this.posteoTexto=''
+    },
+    like(postId){    
+      // Primer paso, recupero el post anterior por su id // para limitar el numero de likes
+      const posteo = this.posteos.find(posteo => posteo.id == postId);
+      // actualizo en la base de datos
+      this.$firestore.posteos.doc(postId).update({
+        likes: posteo.likes++
+      });
     }
   },
   firestore() {           // adding this key/function
