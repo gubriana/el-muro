@@ -37,11 +37,11 @@
                         <p>{{ posteo.text }}</p>
                     </div>
                     <div class="card-content" >
-                            <span>{{ posteo.date }}</span>
-                            <a href="#"  class="secondary-content" @click.prevent="like(posteo.id)" >
-                                <i class="material-icons red-text">favorite</i>
-                                <span class="likes grey-text"><sup>{{posteo.likes}}</sup></span>
-                            </a>
+                        <span>{{ posteo.date }}</span>
+                        <a href="#"  class="secondary-content" @click.prevent="like(posteo.id)" >
+                            <span><i class="material-icons" :class="{greyheart: posteo.likes == 0, redheart: posteo.likes > 0}">favorite</i></span>
+                            <span class="grey-text"><sup>{{posteo.likes}}</sup></span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -68,7 +68,7 @@ export default {
     data: function() {
         return {
             posteoTexto: '',
-            posteos: []
+            posteos: [],
         }
     },
     methods: {
@@ -119,5 +119,11 @@ textarea.materialize-textarea:focus:not([readonly])+label {
 }
 .input-field .prefix.active {
     color:grey;
+}
+.greyheart {
+    color:grey;
+}
+.redheart {
+    color: brown;
 }
 </style>   
