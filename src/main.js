@@ -25,7 +25,6 @@ const store = new Vuex.Store({
     setUsuario(state, nuevoUsuario) {
       state.usuario = nuevoUsuario;
     },
-
     // mutación para cambiar el error
     setError(state, nuevoError) {
       state.error = nuevoError;

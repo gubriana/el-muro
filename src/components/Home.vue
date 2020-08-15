@@ -8,7 +8,7 @@
                 <div class="row">
                     <div class="input-field col m11">
                         <i class="material-icons prefix">mode_edit</i>
-                        <textarea id="icon_prefix2" class="materialize-textarea" maxlength="150" v-model="posteoTexto" required></textarea>
+                        <textarea id="icon_prefix2" class="materialize-textarea" maxlength="80" v-model="posteoTexto" required></textarea>
                         <label for="icon_prefix2">Escribe tu post</label>
                     </div>
                     <div class="col s1 center">
@@ -28,12 +28,14 @@
                 <div class="card">
                     <ul class="collection">
                         <li class="collection-item avatar">
-                        <img src="@/assets/background1.jpg" alt="" class="circle">
-                        <span class="title">{{ posteo.user.nombre }}</span>
+                            <!--<img src="@/assets/background1.jpg" alt="" class="circle">-->                        <span class="title">{{ posteo.user.nombre }}</span>
                         <p>Escribió</p>
                         </li>
                     </ul>
-                    <div class="card-content">
+                    <div class="card-image">
+                        <img src="@/assets/background2.jpg">
+                    </div>
+                    <div class="card-content texto-posteo">
                         <p>{{ posteo.text }}</p>
                     </div>
                     <div class="card-content" >
@@ -52,18 +54,29 @@
 import firebase from 'firebase/app'; 
 import { db } from '@/firebase.js';
 
-// creacion string de fecha
+/* // creacion string de fecha
 const getDate = () => {
   const trailing = (d) => d.length < 10 ? '0'+d : d;
   const now = new Date();
   return `${trailing(now.getDate())}.${trailing(now.getMonth()+1)}.${now.getFullYear()-2000}`;
+} */
+
+const getDate = () => {
+  const trailing = (d) => ('0' + d).slice(-2);
+  const now = new Date();
+  return `${now.getFullYear()}-${trailing(now.getMonth() + 1)}-${trailing(now.getDate())} ${trailing(now.getHours())}:${trailing(now.getMinutes())}:${trailing(now.getSeconds())}`;
 }
 export default {
     name: 'Home',
     computed: {
         usuario() {
             return this.$store.state.usuario;
-        }
+        },
+      /*   posteosOrdenados() {
+            return this.posteos.sort(function(posteo1, posteo2){
+                return posteo1.date > posteo2.date ? 1 : -1;
+            })
+        } */
     },
     data: function() {
         return {
@@ -76,7 +89,7 @@ export default {
         // recuperar usuario actual
         const user = firebase.auth().currentUser
         //Agragamos el nuevo post
-        this.$firestore.posteos.add({
+        db.collection('posteos').add({
             date: getDate(),
             img: null,
             text: this.posteoTexto,
@@ -89,17 +102,17 @@ export default {
         this.posteoTexto=''
     },
     like(postId){    
-      // Primer paso, recupero el post anterior por su id // para limitar el numero de likes
-      const posteo = this.posteos.find(posteo => posteo.id == postId);
-      // actualizo en la base de datos
-      this.$firestore.posteos.doc(postId).update({
+        // Primer paso, recupero el post anterior por su id // para limitar el numero de likes
+        const posteo = this.posteos.find(posteo => posteo.id == postId);
+        // actualizo en la base de datos
+        db.collection('posteos').doc(postId).update({
         likes: posteo.likes++
-      });
+        });
     }
   },
   firestore() {           // adding this key/function
       return {
-          posteos: db.collection('posteos')
+          posteos: db.collection('posteos').orderBy('date', 'desc')
       }
   }
 }
@@ -125,5 +138,11 @@ textarea.materialize-textarea:focus:not([readonly])+label {
 }
 .redheart {
     color: brown;
+}
+.collection {
+    margin: 0 0 0 0;
+}
+.texto-posteo {
+    height: 110px;
 }
 </style>   
